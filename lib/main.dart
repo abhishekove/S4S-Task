@@ -32,66 +32,74 @@ class _AppState extends State<App> {
     height: 1.35,
   );
   Widget body() {
-    return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "lat:${snapshot.data.latitude.toString()},long:${snapshot.data.longitude.toString()}",
-                    overflow: TextOverflow.ellipsis,
-                    style: styles,
-                  ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Abhishek Bapu Ove",style: styles,),
+        ),
+        FutureBuilder(
+          builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
+            if (snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "lat:${snapshot.data.latitude.toString()},long:${snapshot.data.longitude.toString()}",
+                        overflow: TextOverflow.ellipsis,
+                        style: styles,
+                      ),
+                    ),
+                    FutureBuilder(
+                      builder:
+                          (BuildContext context, AsyncSnapshot<Temp> snapshot) {
+                        if (snapshot.hasData)
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Current Temperature is ${snapshot.data.currentTemp}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: styles,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Temperature after one hour will be ${snapshot.data.nextHourTemp}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: styles,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Temperature after one day will be ${snapshot.data.nextDayTemp}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: styles,
+                                ),
+                              ),
+                            ],
+                          );
+                        return CircularProgressIndicator();
+                      },
+                      future: fetchTemperature(snapshot.data.latitude.toString(),
+                          snapshot.data.longitude.toString()),
+                    )
+                  ],
                 ),
-                FutureBuilder(
-                  builder:
-                      (BuildContext context, AsyncSnapshot<Temp> snapshot) {
-                    if (snapshot.hasData)
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Current Temperature is ${snapshot.data.currentTemp}",
-                              overflow: TextOverflow.ellipsis,
-                              style: styles,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Temperature after one hour will be ${snapshot.data.nextHourTemp}",
-                              overflow: TextOverflow.ellipsis,
-                              style: styles,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Temperature after one day will be ${snapshot.data.nextDayTemp}",
-                              overflow: TextOverflow.ellipsis,
-                              style: styles,
-                            ),
-                          ),
-                        ],
-                      );
-                    return CircularProgressIndicator();
-                  },
-                  future: fetchTemperature(snapshot.data.latitude.toString(),
-                      snapshot.data.longitude.toString()),
-                )
-              ],
-            ),
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
-      future: _determinePosition(),
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+          future: _determinePosition(),
+        ),
+      ],
     );
   }
 
